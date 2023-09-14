@@ -41,7 +41,7 @@ const App = () => {
     title: "Half Stack application development",
     parts: [
       {
-        title: "Fundamentals of React",
+        title: "Fundamentals of Reactt",
         exercises: 10,
       },
       {
