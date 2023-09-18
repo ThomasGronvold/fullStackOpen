@@ -1,4 +1,4 @@
-const Header = ({course}) => {
+const Header = ({ course }) => {
   return (
     <>
       <h1>{course.name}</h1>
@@ -6,7 +6,7 @@ const Header = ({course}) => {
   );
 };
 
-const Part = ({part, exercises}) => {
+const Part = ({ part, exercises }) => {
   return (
     <p>
       {part} {exercises}
@@ -14,7 +14,7 @@ const Part = ({part, exercises}) => {
   );
 };
 
-const Content = ({course}) => {
+const Content = ({ course }) => {
   const part = course.parts;
   return (
     <div>
@@ -25,7 +25,7 @@ const Content = ({course}) => {
   );
 };
 
-const Total = ({course}) => {
+const Total = ({ course }) => {
   const part = course.parts;
   return (
     <>
