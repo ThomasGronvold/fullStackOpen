@@ -1,0 +1,10 @@
+post http://localhost:3001/api/blogs/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkhhcnJ5IiwiaWQiOiI2NTNhMmM3MjI0NzVmMjdlMDlhNTU0ODAiLCJpYXQiOjE2OTgzMjA1ODgsImV4cCI6MTY5ODMyNDE4OH0.TSDl6IJC4hPiYRLLeYwzYnA62ndpe9FUPla0BUYvxCs
+
+{
+    "title": "Lalaland",
+    "author": "soniiio",
+    "url": "www.helloworld.gov.no.com.se",
+    "likes": 322
+}
