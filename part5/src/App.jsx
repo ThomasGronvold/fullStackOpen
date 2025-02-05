@@ -1,6 +1,7 @@
 /* Imports */
 import { useState, useEffect } from "react";
 /* Components */
+import CreateBlog from "./components/CreateBlog";
 import Blog from "./components/Blog";
 import Login from "./components/Login";
 import Notification from "./components/Notification";
@@ -10,7 +11,7 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -45,30 +46,51 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setNotificationMessage("Wrong credentials");
       setTimeout(() => {
-        setErrorMessage(null);
+        setNotificationMessage(null);
       }, 5000);
     }
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogUser");
-    setUser(null);
+      window.localStorage.removeItem("loggedBlogUser");
+      setUser(null);
   };
+
+  const handleAddNewBlog = async (newBlog) => {      
+      try {
+         const blog = await blogService.create(newBlog);
+         setBlogs(blogs => [...blogs, blog]);
+         // Set notification message then clear it after 5 seconds
+         setNotificationMessage(`A new blog ${blog.title} by ${blog.author} added`);
+         setTimeout(() => {
+         setNotificationMessage(null);
+         }, 5000);
+      } catch (ex) {
+         // Set notification message then clear it after 5 seconds
+         setNotificationMessage("Failed to add new blog");
+         setTimeout(() => {
+         setNotificationMessage(null);
+         }, 5000);
+      }
+   }
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={notificationMessage} />
 
       {user === null ? (
         <Login
-          handleLogin={handleLogin}
-          setUsername={setUsername}
-          setPassword={setPassword}
+         handleLogin={handleLogin}
+         setUsername={setUsername}
+         setPassword={setPassword}
         />
       ) : (
-        <Blog blogs={blogs} user={user} handleLogout={handleLogout} />
+         <>
+           <Blog blogs={blogs} user={user} handleLogout={handleLogout} />
+           <CreateBlog handleAddNewBlog={handleAddNewBlog} />
+         </>
       )}
     </div>
   );
