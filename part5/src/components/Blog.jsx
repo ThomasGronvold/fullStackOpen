@@ -1,21 +1,24 @@
-const Blog = ({ blogs, user, handleLogout }) => {
-  return (
-    <div>
-      <h2>Blogs</h2>
-      <p>
-        {user.name} logged in.
-        <button onClick={handleLogout}>Logout</button>
-      </p>
+import { useState } from "react";
 
-      {blogs.map((blog) => (
-        <div key={blog.id} className="blog">
-          <h3>{blog.title}</h3>
-          <p>{blog.author}</p>
-          {/* <button onClick={toggleImportance}>{label}</button> */}
-        </div>
-      ))}
-    </div>
-  );
+const Blog = ({ blog, user, handleLikes, handleDeleteBlog }) => {
+   const [visible, setVisible] = useState(false);
+
+   return (
+      <div>
+         <div key={blog.id} className="blogStyle">
+            <h3>{blog.title}</h3>
+            <button onClick={() => setVisible(!visible)}>View</button>
+            {visible && (
+               <>
+                  <p>{blog.author}</p>
+                  <p>{blog.url}</p>
+                  <p>{blog.likes} <button onClick={() => handleLikes(blog.id, blog.likes)}>Like</button></p>
+                  {user.username === blog.user.username && <button onClick={() => handleDeleteBlog(blog.id)}>Delete</button>}
+               </>
+            )}
+         </div>
+      </div>
+   );
 };
 
 export default Blog;

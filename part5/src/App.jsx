@@ -1,6 +1,7 @@
 /* Imports */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 /* Components */
+import Togglable from "./components/Togglable";
 import CreateBlog from "./components/CreateBlog";
 import Blog from "./components/Blog";
 import Login from "./components/Login";
@@ -11,14 +12,21 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [update,setUpdate] = useState(null);
   const [notificationMessage, setNotificationMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
+  const blogFormRef = useRef();
+
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
+
+   useEffect(() => {
+      blogService.getAll().then(blogs => setBlogs(blogs))
+   }, [update])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -33,7 +41,6 @@ const App = () => {
     event.preventDefault();
 
     try {
-      console.log("Username: " + username, "Password: " + password);
       const user = await loginService.login({
         username,
         password,
@@ -46,12 +53,13 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setNotificationMessage("Wrong credentials");
+      setNotificationMessage({ message: "Wrong credentials", type: "error" });
       setTimeout(() => {
         setNotificationMessage(null);
       }, 5000);
     }
   };
+  
 
   const handleLogout = () => {
       window.localStorage.removeItem("loggedBlogUser");
@@ -63,15 +71,41 @@ const App = () => {
          const blog = await blogService.create(newBlog);
          setBlogs(blogs => [...blogs, blog]);
          // Set notification message then clear it after 5 seconds
-         setNotificationMessage(`A new blog ${blog.title} by ${blog.author} added`);
+         setNotificationMessage({ message: `A new blog ${blog.title} by ${blog.author} added`, type: "success" });
+         blogFormRef.current.toggleVisibility();
          setTimeout(() => {
-         setNotificationMessage(null);
+            setNotificationMessage(null);
          }, 5000);
       } catch (ex) {
          // Set notification message then clear it after 5 seconds
-         setNotificationMessage("Failed to add new blog");
+         setNotificationMessage({ message: "Failed to add new blog", type: "error" });
          setTimeout(() => {
          setNotificationMessage(null);
+         }, 5000);
+      }
+   }
+
+   const handleLikes = async (id, likes) => {
+      await blogService.update({
+        id: id,
+        likes: likes + 1
+      })
+      /* +1 the value to update so the like element updates */
+      setUpdate(prevUpdate => prevUpdate + 1);
+    }
+
+   const handleDeleteBlog = async (id) => {
+      try {
+         await blogService.deleteBlog(id);
+         setBlogs(blogs.filter(blog => blog.id !== id));
+         setNotificationMessage({ message: "Blog deleted", type: "success" });
+         setTimeout(() => {
+            setNotificationMessage(null);
+         }, 5000);
+      } catch (ex) {
+         setNotificationMessage({ message: "Failed to delete blog", type: "error" });
+         setTimeout(() => {
+            setNotificationMessage(null);
          }, 5000);
       }
    }
@@ -88,8 +122,22 @@ const App = () => {
         />
       ) : (
          <>
-           <Blog blogs={blogs} user={user} handleLogout={handleLogout} />
-           <CreateBlog handleAddNewBlog={handleAddNewBlog} />
+            <h2>Blogs</h2>
+            <p>
+               {user.name} logged in.
+               <button onClick={handleLogout}>Logout</button>
+             </p>
+
+            {blogs
+               .sort((a, b) => b.likes - a.likes)
+               .map((blog) => (
+                  <Blog key={blog.id} blog={blog} user={user} handleLikes={handleLikes} handleDeleteBlog={handleDeleteBlog} />
+               ))
+            }
+
+            <Togglable buttonLabel="New Blog" ref={blogFormRef}>
+               <CreateBlog handleAddNewBlog={handleAddNewBlog} />
+            </Togglable>
          </>
       )}
     </div>
