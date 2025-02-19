@@ -96,12 +96,15 @@ const App = () => {
 
    const handleDeleteBlog = async (id) => {
       try {
-         await blogService.deleteBlog(id);
-         setBlogs(blogs.filter(blog => blog.id !== id));
-         setNotificationMessage({ message: "Blog deleted", type: "success" });
-         setTimeout(() => {
-            setNotificationMessage(null);
+         if(window.confirm("Are you sure you want to delete this blog?"))
+         {
+            await blogService.deleteBlog(id);
+            setBlogs(blogs.filter(blog => blog.id !== id));
+            setNotificationMessage({ message: "Blog deleted", type: "success" });
+            setTimeout(() => {
+               setNotificationMessage(null);
          }, 5000);
+         }
       } catch (ex) {
          setNotificationMessage({ message: "Failed to delete blog", type: "error" });
          setTimeout(() => {
