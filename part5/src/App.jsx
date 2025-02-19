@@ -11,62 +11,61 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [update,setUpdate] = useState(null);
-  const [notificationMessage, setNotificationMessage] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+   const [blogs, setBlogs] = useState([]);
+   const [update,setUpdate] = useState(null);
+   const [notificationMessage, setNotificationMessage] = useState(null);
+   const [username, setUsername] = useState("");
+   const [password, setPassword] = useState("");
+   const [user, setUser] = useState(null);
 
-  const blogFormRef = useRef();
+   const blogFormRef = useRef();
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+   useEffect(() => {
+      blogService.getAll().then((blogs) => setBlogs(blogs));
+   }, []);
 
    useEffect(() => {
       blogService.getAll().then(blogs => setBlogs(blogs))
    }, [update])
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
-  }, []);
+   useEffect(() => {
+      const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
+      if (loggedUserJSON) {
+         const user = JSON.parse(loggedUserJSON);
+         setUser(user);
+         blogService.setToken(user.token);
+      }
+   }, []);
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
+   const handleLogin = async (event) => {
+      event.preventDefault();
 
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
+      try {
+         const user = await loginService.login({
+            username,
+            password,
+         });
 
-      window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
+         window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
 
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername("");
-      setPassword("");
-    } catch (exception) {
-      setNotificationMessage({ message: "Wrong credentials", type: "error" });
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
-    }
-  };
-  
+         blogService.setToken(user.token);
+         setUser(user);
+         setUsername("");
+         setPassword("");
+      } catch (exception) {
+         setNotificationMessage({ message: "Wrong credentials", type: "error" });
+         setTimeout(() => {
+            setNotificationMessage(null);
+         }, 5000);
+      }
+   };  
 
-  const handleLogout = () => {
+   const handleLogout = () => {
       window.localStorage.removeItem("loggedBlogUser");
       setUser(null);
-  };
+   };
 
-  const handleAddNewBlog = async (newBlog) => {      
+   const handleAddNewBlog = async (newBlog) => {      
       try {
          const blog = await blogService.create(newBlog);
          setBlogs(blogs => [...blogs, blog]);
@@ -80,19 +79,19 @@ const App = () => {
          // Set notification message then clear it after 5 seconds
          setNotificationMessage({ message: "Failed to add new blog", type: "error" });
          setTimeout(() => {
-         setNotificationMessage(null);
+            setNotificationMessage(null);
          }, 5000);
       }
    }
 
    const handleLikes = async (id, likes) => {
       await blogService.update({
-        id: id,
-        likes: likes + 1
+         id: id,
+         likes: likes + 1
       })
       /* +1 the value to update so the like element updates */
       setUpdate(prevUpdate => prevUpdate + 1);
-    }
+   }
 
    const handleDeleteBlog = async (id) => {
       try {
@@ -103,7 +102,7 @@ const App = () => {
             setNotificationMessage({ message: "Blog deleted", type: "success" });
             setTimeout(() => {
                setNotificationMessage(null);
-         }, 5000);
+            }, 5000);
          }
       } catch (ex) {
          setNotificationMessage({ message: "Failed to delete blog", type: "error" });
@@ -113,38 +112,38 @@ const App = () => {
       }
    }
 
-  return (
-    <div>
-      <Notification message={notificationMessage} />
+   return (
+      <div>
+         <Notification message={notificationMessage} />
 
-      {user === null ? (
-        <Login
-         handleLogin={handleLogin}
-         setUsername={setUsername}
-         setPassword={setPassword}
-        />
-      ) : (
-         <>
-            <h2>Blogs</h2>
-            <p>
-               {user.name} logged in.
-               <button onClick={handleLogout}>Logout</button>
-             </p>
+         {user === null ? (
+            <Login
+               handleLogin={handleLogin}
+               setUsername={setUsername}
+               setPassword={setPassword}
+            />
+         ) : (
+            <>
+               <h2>Blogs</h2>
+               <p>
+                  {user.name} logged in.
+                  <button onClick={handleLogout}>Logout</button>
+               </p>
 
-            {blogs
-               .sort((a, b) => b.likes - a.likes)
-               .map((blog) => (
-                  <Blog key={blog.id} blog={blog} user={user} handleLikes={handleLikes} handleDeleteBlog={handleDeleteBlog} />
-               ))
-            }
+               {blogs
+                  .sort((a, b) => b.likes - a.likes)
+                  .map((blog) => (
+                     <Blog key={blog.id} blog={blog} user={user} handleLikes={handleLikes} handleDeleteBlog={handleDeleteBlog} />
+                  ))
+               }
 
-            <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-               <CreateBlog handleAddNewBlog={handleAddNewBlog} />
-            </Togglable>
-         </>
-      )}
-    </div>
-  );
+               <Togglable buttonLabel="New Blog" ref={blogFormRef}>
+                  <CreateBlog handleAddNewBlog={handleAddNewBlog} />
+               </Togglable>
+            </>
+         )}
+      </div>
+   );
 };
 
 export default App;

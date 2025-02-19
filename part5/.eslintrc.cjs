@@ -15,24 +15,11 @@ module.exports = {
    settings: { react: { version: '18.2' } },
    plugins: ['react-refresh'],
    rules: {
-     "indent": [
-         "error",
-         2  
-     ],
-     "linebreak-style": [
-         "error",
-         "unix"
-     ],
-     "quotes": [
-         "error",
-         "single"
-     ],
-     "semi": [
-         "error",
-         "never"
-     ],
+       "indent": [
+          "error",
+          3
+       ],
      "eqeqeq": "error",
-     "no-trailing-spaces": "error",
      "object-curly-spacing": [
          "error", "always"
      ],
