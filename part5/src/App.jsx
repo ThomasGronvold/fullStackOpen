@@ -25,8 +25,8 @@ const App = () => {
    }, []);
 
    useEffect(() => {
-      blogService.getAll().then(blogs => setBlogs(blogs))
-   }, [update])
+      blogService.getAll().then(blogs => setBlogs(blogs));
+   }, [update]);
 
    useEffect(() => {
       const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -82,16 +82,16 @@ const App = () => {
             setNotificationMessage(null);
          }, 5000);
       }
-   }
+   };
 
    const handleLikes = async (id, likes) => {
       await blogService.update({
          id: id,
          likes: likes + 1
-      })
+      });
       /* +1 the value to update so the like element updates */
       setUpdate(prevUpdate => prevUpdate + 1);
-   }
+   };
 
    const handleDeleteBlog = async (id) => {
       try {
@@ -110,7 +110,7 @@ const App = () => {
             setNotificationMessage(null);
          }, 5000);
       }
-   }
+   };
 
    return (
       <div>

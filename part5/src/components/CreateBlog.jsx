@@ -16,7 +16,7 @@ const CreateBlog = ({ handleAddNewBlog }) => {
       setTitle("");
       setAuthor("");
       setUrl("");
-   }
+   };
 
    return (
       <div>
@@ -33,6 +33,7 @@ const CreateBlog = ({ handleAddNewBlog }) => {
                            type="text"
                            name="title"
                            id="title"
+                           data-testid="title"
                            onChange={({ target }) => setTitle(target.value)}
                         />
                      </td>
@@ -46,6 +47,7 @@ const CreateBlog = ({ handleAddNewBlog }) => {
                            type="text"
                            name="author"
                            id="author"
+                           data-testid="author"
                            onChange={({ target }) => setAuthor(target.value)}
                         />
                      </td>
@@ -59,6 +61,7 @@ const CreateBlog = ({ handleAddNewBlog }) => {
                            type="text"
                            name="url"
                            id="url"
+                           data-testid="url"
                            onChange={({ target }) => setUrl(target.value)}
                         />
                      </td>

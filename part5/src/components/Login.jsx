@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 const Login = ({ handleLogin, setUsername, setPassword }) => {
    return (
@@ -45,6 +45,6 @@ Login.propTypes = {
    handleLogin: PropTypes.func.isRequired,
    setUsername: PropTypes.func.isRequired,
    setPassword: PropTypes.func.isRequired,
-}
+};
 
 export default Login;
