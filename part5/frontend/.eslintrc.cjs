@@ -19,7 +19,8 @@ module.exports = {
       'build',
       'coverage',
       'vite.config.js',
-      'testSetup.js'
+      'testSetup.js',
+      'playwright.config.js'
    ],
    parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
    settings: { react: { version: '18.2' } },

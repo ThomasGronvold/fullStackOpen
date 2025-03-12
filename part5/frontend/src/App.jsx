@@ -65,10 +65,14 @@ const App = () => {
       setUser(null);
    };
 
-   const handleAddNewBlog = async (newBlog) => {      
+   const handleAddNewBlog = async (newBlog) => {
+      console.log(newBlog);
+      
       try {
          const blog = await blogService.create(newBlog);
+         
          setBlogs(blogs => [...blogs, blog]);
+         setUpdate(prevUpdate => prevUpdate + 1);
          // Set notification message then clear it after 5 seconds
          setNotificationMessage({ message: `A new blog ${blog.title} by ${blog.author} added`, type: "success" });
          blogFormRef.current.toggleVisibility();
@@ -127,7 +131,7 @@ const App = () => {
                <h2>Blogs</h2>
                <p>
                   {user.name} logged in.
-                  <button onClick={handleLogout}>Logout</button>
+                  <button data-testid="logout-button" onClick={handleLogout}>Logout</button>
                </p>
 
                {blogs

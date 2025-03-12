@@ -4,7 +4,7 @@ const Login = ({ handleLogin, setUsername, setPassword }) => {
    return (
       <div>
          <h2>Log in to application</h2>
-         <form onSubmit={handleLogin}>
+         <form data-testid="loginForm" onSubmit={handleLogin}>
             <table>
                <tbody>
                   <tr>
@@ -35,7 +35,7 @@ const Login = ({ handleLogin, setUsername, setPassword }) => {
                   </tr>
                </tbody>
             </table>
-            <button>Login</button>
+            <button data-testid="login-button">Login</button>
          </form>
       </div>
    );
